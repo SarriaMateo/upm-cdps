@@ -1,0 +1,61 @@
+#PC2
+#Mateo Sarria Franco de Sarabia
+#Rafael Bueno Castro
+#Jacobo España-Heredia Beteta
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: productpage
+  labels:
+    app: productpage
+    service: productpage
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: productpage
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: productpage-v1
+  labels:
+    app: productpage
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: productpage
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: productpage
+        version: v1
+    spec:
+      containers:
+      - name: productpage
+        image: mateosarria/pc2:productpage
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+        securityContext:
+          runAsUser: 1000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: productpage-external
+spec:
+  type: LoadBalancer
+  selector:
+    app: productpage
+  ports:
+  - name: http
+    port: 9080
+    targetPort: 9080
+  
+---

@@ -1,0 +1,37 @@
+services:
+  details:
+    build: ./details/.
+    container_name: details-37
+    depends_on:
+    - productpage
+    environment:
+    - SERVICE_VERSION=v1
+    - ENABLE_EXTERNAL_BOOK_SERVICE=true
+    image: details/37
+  productpage:
+    build: ./productPage/.
+    container_name: productpage-37
+    environment:
+    - GROUP_NUMBER=37
+    image: productpage/37
+    ports:
+    - 9080:9080
+  ratings:
+    build: ./ratings/.
+    container_name: ratings-37
+    depends_on:
+    - reviews
+    environment:
+    - SERVICE_VERSION=v1
+    image: ratings/37
+  reviews:
+    build: ./practica_creativa2/bookinfo/src/reviews/reviews-wlpcfg/.
+    container_name: reviews-37
+    depends_on:
+    - productpage
+    environment:
+      ENABLE_RATINGS: 'true'
+      SERVICE_VERSION: v3
+      STAR_COLOR: red
+    image: reviews/37
+version: '3'
