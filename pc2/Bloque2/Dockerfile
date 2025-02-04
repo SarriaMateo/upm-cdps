@@ -5,7 +5,7 @@
 
 FROM python:3.7.7-slim
 
-# Actualiza el sistema y expone el puerto 5080
+# Actualiza el sistema y expone el puerto 9080
 RUN apt-get update && apt-get install -y git && apt-get install -y python3-pip && apt-get clean
 EXPOSE 9080
 
