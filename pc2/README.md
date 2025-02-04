@@ -138,7 +138,7 @@ Después de ejecutar `bloque3.py`, accedemos al navegador con `http://<ip-public
 
 ---
 
-## Parte 4: Despliegue con Kubernetes
+## Parte 4: Despliegue de una aplicación basada en microservicios utilizando Kubernetes
 
 Ahora se despliega la aplicación con Kubernetes en lugar de `docker-compose`.
 
@@ -149,7 +149,13 @@ El script `bloque4.py`, dentro de `Bloque4`, automatiza la creación y lanzamien
 - `reviews-service.yaml`
 - `reviews-v1-deployment.yaml`, `reviews-v2-deployment.yaml`, `reviews-v3-deployment.yaml`
 
-Las imágenes están subidas a Docker Hub bajo `mateosarria/pc2:<servicio>`. Luego, creamos un clúster GKE con 3 nodos, nos conectamos desde Google Shell y ejecutamos `bloque4.py`.
+Las imágenes están subidas a Docker Hub bajo `mateosarria/pc2:<servicio>`. Luego, creamos un clúster GKE con 3 nodos, nos conectamos desde Google Shell y ejecutamos:
+
+```bash
+python3 bloque3.py vX
+```
+
+Sustituyendo `vX` por `v1`, `v2` o `v3`.
 
 Después de ejecutar el script, obtenemos la ip pública de `productpage-external` ejecutando:
 ```bash
@@ -161,6 +167,3 @@ Accedemos al navegador con `http://<ip-publica>:9080/productpage`.
 - **v1** ![part4-v1](https://user-images.githubusercontent.com/99333138/215883363-24619338-15b2-41d1-a586-bf355789b8ed.png)
 - **v2** ![part4-v2](https://user-images.githubusercontent.com/99333138/215883431-93dec63c-eb26-40ff-b974-45d11d7b507f.png)
 - **v3** ![part4-v3](https://user-images.githubusercontent.com/99333138/215883477-f06f351b-06e2-471c-8549-cddf7dbb4c84.png)
-
-
----
