@@ -1,36 +1,60 @@
 # Gestión Automatizada de Máquinas Virtuales
 **Práctica de la asignatura Centros de Datos y Provisión de Servicios (CDPS)**
 
-Este proyecto implementa una herramienta en Python para la creación, despliegue y destrucción de una infraestructura virtual sencilla. El objetivo es automatizar la provisión de máquinas virtuales y redes virtuales como parte de un entorno de laboratorio para prácticas de centros de datos.
+Este proyecto implementa una herramienta en Python para la creación, despliegue, gestión y destrucción de una infraestructura virtual utilizada en el laboratorio de CDPS. El sistema permite automatizar la provisión de máquinas virtuales, redes virtuales y servicios asociados mediante un único punto de control.
 
-El script principal, `manage-p2.py`, utiliza una biblioteca auxiliar (`lib_vm.py`) que proporciona las abstracciones necesarias para gestionar máquinas virtuales (VM) y redes virtuales (NET). El resultado es una utilidad simple, reproducible y fácilmente ampliable para prácticas de automatización y despliegue.
+El script principal, `manage-p2.py`, trabaja junto a:
+- `lib_vm.py`, que contiene las clases auxiliares para gestionar máquinas virtuales (VM) y redes (NET).
+- `manage-p2.json`, que almacena parámetros de configuración como:
+  - Si el modo *debug* está activado.
+  - El número de servidores que deben crearse dinámicamente.
 
 ---
 
 ## Funcionalidad
 
-El programa permite ejecutar tres operaciones principales:
+El programa permite ejecutar varias operaciones principales sobre la infraestructura:
 
 ### Crear la infraestructura
-- Creación de dos máquinas virtuales:
+- Creación de las máquinas virtuales base:
   - `c1`
   - `lb` (balanceador)
-- Creación de dos redes virtuales:
+- Creación dinámica de hasta 5 servidores adicionales (`s1`, `s2`, `s3`, …), según el número indicado en `manage-p2.json`.
+- Creación de redes virtuales:
   - `LAN1`
   - `LAN2`
-- Asociación de cada máquina a su red correspondiente.
-- Preparación de las imágenes base necesarias para el laboratorio.
+- Conexión de cada máquina a su red correspondiente.
+- Preparación de las imágenes base necesarias para el entorno.
 
-### Desplegar servicios
-- Arranque de todas las máquinas virtuales.
-- Ejecución remota de comandos en cada VM.
-- Posibilidad de instalar software, copiar archivos o habilitar servicios.
-- Configuración de la máquina `lb` como balanceador.
+### Gestión de máquinas: start, stop y destroy
+Una vez creada la infraestructura, las operaciones se realizan sobre máquinas específicas o sobre todas a la vez.
 
-### Destruir la infraestructura
-- Apagado y eliminación de las máquinas virtuales.
-- Eliminación de las redes virtuales creadas.
-- Limpieza completa del entorno.
+**Acción sobre máquinas concretas**:
+```
+python3 manage-p2.py start c1 lb s1 s3
+```
+
+**Acción sobre todas las máquinas**:
+```
+python3 manage-p2.py stop
+```
+
+Las órdenes disponibles son: 
+- `create`
+- `start`
+- `stop`
+- `destroy`
+
+---
+
+## Archivos necesarios en la carpeta
+
+Para que el programa funcione correctamente, es obligatorio añadir en el directorio del proyecto los siguientes archivos del laboratorio CDPS:
+
+- `cdps-vm-base-pc1.qcow2`
+- `plantilla-vm-pc1.xml`
+
+Estos archivos no están incluidos porque pertenecen al material docente del laboratorio.
 
 ---
 
@@ -38,8 +62,11 @@ El programa permite ejecutar tres operaciones principales:
 
 ```
 /
-├── manage-p2.py        # Script principal de gestión de la infraestructura
-├── lib_vm.py           # Biblioteca con las clases VM y NET (no incluida en este repositorio)
+├── manage-p2.py              # Script principal de gestión de la infraestructura
+├── manage-p2.json            # Archivo de configuración del modo debug y número de servidores
+├── lib_vm.py                 # Biblioteca auxiliar
+├── cdps-vm-base-pc1.qcow2    # (Debe añadirse manualmente)
+├── plantilla-vm-pc1.xml      # (Debe añadirse manualmente)
 └── README.md
 ```
 
@@ -47,26 +74,39 @@ El programa permite ejecutar tres operaciones principales:
 
 ## Uso del script
 
-El programa se ejecuta desde terminal y acepta un comando principal:
-
-### Crear
+### Crear la infraestructura
 ```
 python3 manage-p2.py create
 ```
 
-### Desplegar
+### Arrancar máquinas específicas
 ```
-python3 manage-p2.py deploy
+python3 manage-p2.py start c1 lb s1 s3
 ```
 
-### Destruir
+### Arrancar todas las máquinas
+```
+python3 manage-p2.py start
+```
+
+### Detener máquinas específicas
+```
+python3 manage-p2.py stop s2 s3
+```
+
+### Detener todas las máquinas
+```
+python3 manage-p2.py stop
+```
+
+### Destruir máquinas específicas
+```
+python3 manage-p2.py destroy c1 s1
+```
+
+### Destruir toda la infraestructura
 ```
 python3 manage-p2.py destroy
-```
-
-Modo detallado (debug):
-```
-python3 manage-p2.py create debug
 ```
 
 ---
@@ -74,17 +114,21 @@ python3 manage-p2.py create debug
 ## Dependencias
 
 - Python 3.x
-- Infraestructura de virtualización utilizada en la asignatura CDPS
+- Infraestructura de virtualización del laboratorio CDPS
 - Archivo `lib_vm.py` con las clases `VM` y `NET`
+- Archivos:
+  - `cdps-vm-base-pc1.qcow2`
+  - `plantilla-vm-pc1.xml`
 - Módulos estándar de Python:
   - subprocess
   - logging
   - sys
+  - json
 
 ---
 
 ## Autores
 
-- Mateo Sarria Franco de Sarabia  
-- Rafael Bueno Castro  
+- Mateo Sarria Franco de Sarabia
+- Rafael Bueno Castro
 - Jacobo España-Heredia Beteta
